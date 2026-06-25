@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="徳島大学 生態系管理工学研究室の公式ウェブサイトです。">
+  <title>徳島大学 生態系管理工学研究室 (Ecosystem Management Lab)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #2e7d32; /* Deep natural green */
+  --primary-light: #60ad5e;
+  --primary-dark: #005005;
+  --bg-color: #f8faf9;
+  --text-main: #2c3e2e;
+  --text-light: #5f7461;
+  --white: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Header */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+header.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--primary-color);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-main);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  padding: 0.5rem 0;
+  transition: var(--transition);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-color);
+  transition: var(--transition);
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  min-height: 600px;
+  background-image: linear-gradient(rgba(0, 40, 10, 0.4), rgba(0, 40, 10, 0.7)), url('images/hero.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  padding: 0 2rem;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  animation: fadeUp 1s ease-out;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: var(--primary-color);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+.btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--white);
+  box-shadow: none;
+  margin-left: 1rem;
+}
+
+.btn-outline:hover {
+  background: var(--white);
+  color: var(--primary-dark);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Page Header (for subpages) */
+.page-header {
+  height: 40vh;
+  min-height: 300px;
+  background-image: linear-gradient(rgba(0, 40, 10, 0.6), rgba(0, 40, 10, 0.8)), url('images/hero.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  padding-top: 60px;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  animation: fadeUp 0.8s ease-out;
+}
+
+/* Layout */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* Card Styles */
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Member Grid */
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.member-card {
+  text-align: center;
+}
+
+.member-role {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.member-name {
+  font-size: 1.3rem;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+/* Research List */
+.research-item {
+  border-left: 4px solid var(--primary-light);
+  padding-left: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.research-item h3 {
+  font-size: 1.2rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.research-author {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Links List */
+.links-list {
+  list-style: none;
+}
+
+.links-list li {
+  margin-bottom: 1rem;
+}
+
+.links-list a {
+  display: block;
+  padding: 1rem 1.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-main);
+  font-weight: 500;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+}
+
+.links-list a:hover {
+  border-left-color: var(--primary-color);
+  transform: translateX(5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Footer */
+footer {
+  background: var(--primary-dark);
+  color: rgba(255,255,255,0.8);
+  padding: 3rem 2rem 1.5rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  color: var(--white);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.social-icon:hover {
+  background: var(--primary-light);
+  transform: translateY(-3px);
+}
+
+.copyright {
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1.5rem;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    width: 100%;
+    height: calc(100vh - 70px);
+    background: var(--white);
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .nav-links.active {
+    left: 0;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
+.page-section { display: none; }
+#page-home { display: block; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="#home" class="logo">
+        生態系管理工学研究室
+        <span>徳島大学 工学部 建設工学科</span>
+      </a>
+      <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="#home">ホーム</a></li>
+        <li><a href="#about">研究室紹介</a></li>
+        <li><a href="#members">メンバー</a></li>
+        <li><a href="#research">研究テーマ</a></li>
+        <li><a href="#projects">卒業・修士研究</a></li>
+        <li><a href="#achievements">研究業績</a></li>
+        <li><a href="#links">リンク</a></li>
+        <li><a href="#others">その他</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div id="content-area">
+    <section id="page-home" class="page-section">
+      <main>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Welcome to Ecosystem Management Lab.</h1>
+        <p>「人と生き物が共存し、多様な生き物で賑わう持続可能な社会づくり」</p>
+        <a href="about.html" class="btn">研究室について知る</a>
+        <a href="research.html" class="btn btn-outline">研究テーマを見る</a>
+      </div>
+    </section>
+
+    <section class="container fade-in-section">
+      <h2 class="section-title">News & Updates</h2>
+      <div class="card">
+        <h3>研究室訪問の受入れ</h3>
+        <p>日時: 2025年 7月8日(火) 16時20分～17時50分</p>
+        <p>場所: 建設棟3階 A303 (大セミナー室)</p>
+      </div>
+    </section>
+  
+      </main>
+    </section>
+    <section id="page-about" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>研究室紹介</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <section class="card">
+      <h2 class="section-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 1rem;">コンセプト</h2>
+      <p>私たちの研究室は「人と生き物が共存し、多様な生き物で賑わう持続可能な社会づくり」を目的として、様々な人たちと連携しながら活動しています。</p>
+      <br>
+      <p>私たちヒトは、自然からの恵み（生態系サービス）を享受しながら生活を営んでいます。けれども、この数十年で生物多様性は大きく減少し、生態系の劣化が進行しています。同時に、地域で培われてきた自然資源を管理していくための文化や技術、価値も変容し、衰退してきています。</p>
+      <br>
+      <p>今、「生き物と生き物のつながり」、「人と自然のつながり」、「人と人のつながり」を回復し、私たちの子供たちや、その子供たちが自然からの恵みをずっと得られ続けられる、持続可能な社会を構築していかなければなりません。そのためには、地域生態系の構造や機能、伝統的な資源管理技術の活かし方、多様な価値観を持つ人たちとの合意形成・協働手法など、幅広い分野にわたる情報や技術の蓄積が必要となります。</p>
+      <br>
+      <p>私たちは生態学を軸足にして、これら多岐に渡る事柄についての研究にチャレンジし続けています。そして、研究成果を総合化し、生態系を持続的に保全・管理していくための計画論や社会システムを提案していきます。</p>
+    </section>
+  
+      </main>
+    </section>
+    <section id="page-members" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>メンバー</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <section class="card">
+      <h2 class="section-title">教員・研究員</h2>
+      <div class="member-grid">
+        <div class="member-card">
+          <div class="member-role">教授</div>
+          <div class="member-name">鎌田 磨人</div>
+          <a href="http://pub2.db.tokushima-u.ac.jp/ERD/person/10607/profile-ja.html" target="_blank" class="btn btn-outline" style="color: var(--primary-color); border-color: var(--primary-color);">詳細</a>
+        </div>
+        <div class="member-card">
+          <div class="member-role">准教授</div>
+          <div class="member-name">河口 洋一</div>
+          <a href="http://pub2.db.tokushima-u.ac.jp/ERD/person/189080/profile-ja.html" target="_blank" class="btn btn-outline" style="color: var(--primary-color); border-color: var(--primary-color);">詳細</a>
+        </div>
+        <div class="member-card">
+          <div class="member-role">研究員</div>
+          <div class="member-name">飯山 直樹<br>佐藤 雄大</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card fade-in-section">
+      <h2 class="section-title">2025年度 学生</h2>
+      <div class="member-grid">
+        <div class="member-card">
+          <div class="member-role">博士後期課程 D2</div>
+          <div class="member-name">戴 帰航<br>安達 直之</div>
+        </div>
+        <div class="member-card">
+          <div class="member-role">博士前期課程 M2</div>
+          <div class="member-name">兒玉 博之<br>冨田 聖夢</div>
+        </div>
+        <div class="member-card">
+          <div class="member-role">博士前期課程 M1</div>
+          <div class="member-name">猪股 研斗<br>高谷 直希<br>PARK MINJU</div>
+        </div>
+        <div class="member-card">
+          <div class="member-role">学部生 B4</div>
+          <div class="member-name">大西 幸太<br>大橋 拓峰<br>岡本 瑞季<br>波多江 律騎<br>福武 未紗<br>米澤 亮玖</div>
+        </div>
+      </div>
+    </section>
+  
+      </main>
+    </section>
+    <section id="page-research" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>研究テーマ</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <div class="card">
+      <div class="research-item">
+        <div class="research-author">PD 朝波史香</div>
+        <h3>「海岸マツ林の保全管理とローカルガバナンス」</h3>
+        <p>重要なグリーンインフラの一つである海岸マツ林は、現在その多くは放置に伴う遷移や松枯れ病によって劣化してきている。多様な機能を有する海岸マツ林の持続的な保全管理を誰が、どのように担うのか、またそのための予算はどうするのか、といった課題に対して地域の自治体による海岸マツ林の保全・管理、活用の仕組みの到達度を、ガバナンス論を用いて評価し、持続的管理・活用を支える上で有効な仕組みを検討することを目的とした。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">PD 佐藤雄大</div>
+        <h3>「レーダーを用いたコウモリ類に対する環境アセスメント手法の開発 〜暗闇の高空域に舞う飛翔動物の識別を目指して〜」</h3>
+        <p>近年，原発に代わる再生可能エネルギーとして風力発電に対する期待が高まる一方，鳥やコウモリの風車衝突事故が大きな懸念となっています．船舶用のXバンドレーダーを用いることで，広大な夜空の中からコウモリを検出し，飛翔数を定量化した上で，風車への衝突リスク予測を可能にする手法の開発を目指しています．</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">D2 戴帰航</div>
+        <h3>「四国における絶滅危惧種ツキノワグマの生息地評価と保全」</h3>
+        <p>四国のツキノワグマの個体数が回復しない要因を明らかにするため、西日本における生息地の植生変化や、絶滅を招いている要因の特定を行う。また、絶滅の危機に瀕する四国のツキノワグマの保全方策を提言するとともに、社会実装に向けた合意形成を目指す。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">M2 兒玉博之</div>
+        <h3>「猛禽類サシバの渡りにおける飛翔特徴と環境条件との関係性」</h3>
+        <p>測距双眼鏡という3次元の位置情報を高精度かつ連続的に取得できる機材を用いて調査を行い、猛禽類サシバの渡り時における飛行高度を明らかにし、地形要因と飛行高度の関係性から、飛行高度を予測するモデルを構築する。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">M2 冨田聖夢</div>
+        <h3>「絶滅危惧の四国のツキノワグマ保全の枠組みづくりー地域との共存を目指してー」</h3>
+        <p>アクションリサーチを通じて、地域住民へのヒアリングやＷＳを実施し、これからの森づくりを地域が主体となって考えることで、クマの保護活動と地域創生のあり方を検討する。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">M1 猪股研斗</div>
+        <h3>「蓮田における農薬の使用量が昆虫量およびコウモリの活動量に与える影響」</h3>
+        <p>従来型農業、減農薬農業、NPOが造成したビオトープの3環境間でコウモリの採餌活動や昆虫量を比較し、その関係性を解明することを目指す。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">M1 高谷直希</div>
+        <h3>「兵庫県北部におけるコウノトリの飛翔特性と他の鳥類との比較」</h3>
+        <p>兵庫県北部におけるコウノトリの利用高度ごとの利用率を明らかにし、他の鳥類の飛翔高度や飛翔速度、飛翔高度の上昇率を比較した。</p>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">M1 PARK MINJU</div>
+        <h3>「韓国におけるツキノワグマ導入個体群が利用する森林植生とその連続性評価」</h3>
+        <p>ツキノワグマが餌資源として選好する森林の特性を分析し、その利用傾向を明らかにする成果を得た。今後は将来的な生息地の拡大と人との共存を実現するための管理方策を提示する。</p>
+      </div>
+    </div>
+  
+      </main>
+    </section>
+    <section id="page-projects" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>卒業研究・修士研究</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <div class="card">
+      <h2 class="section-title">2022年度 卒業生・修了生の研究発表</h2>
+      <p style="text-align: center; margin-bottom: 2rem;">※実際の動画はYouTube等にアップロードして埋め込みます。</p>
+      
+      <div class="research-item">
+        <div class="research-author">M2 礎 有希</div>
+        <h3>知床における観光客の需要とガイド事業者の意識との差異を踏まえた持続的なエコツーリズムに関する考察</h3>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">B4 松崎 翼</div>
+        <h3>鳴門海峡における猛禽類の秋の渡りと気象条件の関係</h3>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">B4 吉田 匠吾</div>
+        <h3>阿南市に生息するオヤニラミの生息環境解析</h3>
+      </div>
+
+      <div class="research-item">
+        <div class="research-author">B4 湯浅 雄仁</div>
+        <h3>那賀川流域における3つのダム湖およびその下流河川におけるコウモリの活動量比較</h3>
+      </div>
+    </div>
+  
+      </main>
+    </section>
+    <section id="page-achievements" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>研究業績</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <div class="card">
+      <h2 class="section-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 1rem;">鎌田グループ</h2>
+      <h3 style="color: var(--primary-color); margin-bottom: 1rem;">学術論文(審査論文) - 抜粋</h3>
+      <ol style="padding-left: 1.5rem; margin-bottom: 2rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.8;">
+        <li>R. Inui, S. Takemura, A. Koyama, N. Onikura and Mahito Kamada: Potential distribution of Tridentiger barbatus and Tridentiger nudicervicus in the Seto Inland Sea, western Japan., Ichthyological Research, 2013.</li>
+        <li>鎌田 磨人, 三幣 亮, 岡 和樹: 土地の生産性と山地災害リスクの評価に基づく森林の広域ゾーニング手法, 景観生態学, No.8, 109-122〜122頁, 2013年.</li>
+        <li>大西 舞, 松下 京平, 白川 勝信, 鎌田 磨人: 地域住民による雲月山草原の経済価値評価, 農村計画学会誌, No.32, 191〜196頁, 2013年.</li>
+        <li>Asuka Yamashiro, Mahito Kamada and Tadashi Yamashiro: A comparative study of the fecal characters of Japanese serow and sika deer, Mammal Study, Vol.38, No.2, pp.117--122, 2013.</li>
+        <li>竹村 紫苑, 赤松 良久, 鎌田 磨人: パラオ諸島における分布予測モデルを用いたマングローブ生育地の脆弱度評価, 土木学会論文集G(環境), Vol.68, No.5, 2012年.</li>
+        <li>竹村 紫苑, 赤松 良久, 鎌田 磨人: 沖縄本島億首川における出水時の河床変動に着目したマングローブ林の生育地評価, 土木学会論文集B1(水工学), Vol.68, No.4, 2012年.</li>
+        <li>田代 優秋, 犬伏 敏真, 藤森 元浩, 河野 正弘, 鎌田 磨人: 維持管理意欲を向上する"工夫の余地"という水路設計思想, 農業農村工学会誌, Vol.80, No.3, 15〜18頁, 2012年.</li>
+      </ol>
+      <p style="font-size: 0.9rem; color: var(--text-light);">※その他多数。全ての業績は研究室までお問い合わせください。</p>
+    </div>
+
+    <div class="card fade-in-section">
+      <h2 class="section-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 1rem;">河口グループ</h2>
+      <h3 style="color: var(--primary-color); margin-bottom: 1rem;">学術論文(審査論文) - 抜粋</h3>
+      <ol style="padding-left: 1.5rem; margin-bottom: 2rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.8;">
+        <li>Y. Kano, Yoichi Kawaguchi, T. Yamashita, et al: A passive integrated transponder tag implanted by a new alternative surgical method, Landscape and Ecological Engineering, Vol.9, No.2, 2013.</li>
+        <li>Rei Itukushima, Yukihiro Shimatani and Yoichi Kawaguchi: The effectiveness of delineating ecoregions in the Kyushu region of Japan for establishing environmental indicators, Landscape and Ecological Engineering, No.9, 2013.</li>
+        <li>Hironori Hayashi, Yukihiro Shimatani, et al: A study on seed dispersal by flood flow in an artificially restored floodplain, Landscape and Ecological Engineering, No.8, 2012.</li>
+        <li>Shigeya Nagayama, Futoshi Nakamura, Yoichi Kawaguchi and Daisuke Nakano: Effects of configuration of instream wood on autumn and winter habitat use by fish in a large remeandering reach, Hydrobiologia, Vol.680, 2012.</li>
+        <li>高比良 光治, 島谷 幸宏, 久岡 夏樹, 河口 洋一, 佐藤 辰郎, 池松 伸也: 板櫃川で実施された多自然川づくりの魚類生息環境からみた評価, 河川技術論文集, Vol.17, 395〜400頁, 2011年.</li>
+        <li>田中 亘, 鹿野 雄一, 山下 奉海, 斉藤 慶, 河口 洋一, 島谷 幸宏: 佐渡島の河川のドジョウ密度を決定する要因とその保全策への応用, 応用生態工学, Vol.14, No.1, 1〜9頁, 2011年.</li>
+      </ol>
+      <p style="font-size: 0.9rem; color: var(--text-light);">※その他多数。全ての業績は研究室までお問い合わせください。</p>
+    </div>
+  
+      </main>
+    </section>
+    <section id="page-links" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>リンク</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <div class="card">
+      <ul class="links-list">
+        <li><a href="http://www.tokushima-u.ac.jp/" target="_blank">徳島大学 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.tokushima-u.ac.jp/e/" target="_blank">徳島大学 工学部 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.ce.tokushima-u.ac.jp/index-jp.html" target="_blank">徳島大学 工学部 建設工学科 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.nara-wu.ac.jp/rigaku/bio/pcecol/index.html" target="_blank">奈良女子大学 和田恵次教授の研究室 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.cc.kochi-u.ac.jp/~mhiga/index.html" target="_blank">高知大学 石川慎吾教授、三宅尚講師の研究室 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.hozen-tokushima.org/" target="_blank">徳島保全生物学研究会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.rfc.or.jp/" target="_blank">（財）リバーフロント整備センター <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.hitohaku.jp/" target="_blank">兵庫県立人と自然の博物館 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.museum.tokushima-ec.ed.jp/default.htm" target="_blank">徳島県立博物館 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.1000nen.biz-awa.jp/" target="_blank">徳島県 千年の森ふれあい館 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.skr.mlit.go.jp/tokushima/" target="_blank">国土交通省（徳島河川国道事務所） <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.jsce.or.jp/" target="_blank">土木学会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://jale-japan.org/wp/" target="_blank">日本景観生態学会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.ecesj.com/" target="_blank">応用生態工学会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.forestry.jp/" target="_blank">日本森林学会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://www.esj.ne.jp/esj/" target="_blank">日本生態学会 <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+        <li><a href="http://awatonbo.blog64.fc2.com/" target="_blank">阿波蜻蛉（研究OBのブログ） <i class="fas fa-external-link-alt" style="font-size:0.8em; margin-left:5px; color:#999;"></i></a></li>
+      </ul>
+    </div>
+  
+      </main>
+    </section>
+    <section id="page-others" class="page-section">
+<div class="page-header">
+    <div class="container">
+      <h1>その他・主な進路先</h1>
+    </div>
+      <main class="container fade-in-section">
+
+    <div class="card">
+      <h2 class="section-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 1rem;">主な進路先</h2>
+      
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2015年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>チョーモク株式会社</li>
+          <li>ニタコンサルタント株式会社</li>
+          <li>株式会社建設技術研究所</li>
+          <li>セントラル株式会社</li>
+          <li>岐阜県庁</li>
+          <li>東近江市永源寺森林組合</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2014年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2013年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>大久保産業株式会社</li>
+          <li>徳島県庁</li>
+          <li>香川証券株式会社</li>
+          <li>徳島市役所</li>
+          <li>フジタ建設コンサルタント</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2012年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>松山測量設計</li>
+          <li>トライ・オリーブミュージック合同会社</li>
+          <li>坂本左官</li>
+          <li>株式会社リキッドガス</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2011年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>朝日ウッドテック株式会社</li>
+          <li>若築建設株式会社</li>
+          <li>株式会社姫野組</li>
+          <li>株式会社松本コンサルタント</li>
+          <li>株式会社長大</li>
+          <li>Nature Vision</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2010年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>株式会社不動テトラ</li>
+          <li>株式会社愛媛銀行</li>
+          <li>キタイ設計株式会社</li>
+          <li>神戸市役所</li>
+          <li>東とくしま農業協同組合</li>
+        </ul>
+      </div>
+      
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">2007〜2009年度</h3>
+        <ul style="list-style-type: disc; padding-left: 2rem; color: var(--text-main);">
+          <li>徳島大学大学院</li>
+          <li>徳島市役所、藍住町役場、板野町役場</li>
+          <li>国土交通省中国地方整備局、近畿地方整備局</li>
+          <li>日亜化学工業株式会社、三浦工業株式会社</li>
+          <li>その他多数の建設業、コンサルタント企業等</li>
+        </ul>
+      </div>
+
+    </div>
+  
+      </main>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">徳島大学 生態系管理工学研究室</div>
+      <p>〒770-8506 徳島市南常三島町2-1 建設棟3F</p>
+      <div class="social-links">
+        <a href="https://www.facebook.com/" target="_blank" class="social-icon" aria-label="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2026 徳島大学 工学部 建設工学科 生態系管理工学研究室. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile Menu Toggle
+  const menuBtn = document.querySelector('.mobile-menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (menuBtn && navLinks) {
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuBtn.querySelector('i');
+      if (icon) {
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      }
+    });
+  }
+
+  // Header Scroll Effect
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  // Fade In Animation on Scroll
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.fade-in-section').forEach(section => {
+    observer.observe(section);
+  });
+});
+
+
+// SPA Navigation Logic
+function navigateTo(pageId) {
+    document.querySelectorAll('.page-section').forEach(sec => {
+        sec.style.display = 'none';
+    });
+    const target = document.getElementById('page-' + pageId);
+    if (target) {
+        target.style.display = 'block';
+    }
+    window.scrollTo(0, 0);
+    
+    // Close mobile menu if open
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks && navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        const icon = document.querySelector('.mobile-menu-btn i');
+        if (icon) {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href.startsWith('#')) {
+                const pageId = href.substring(1);
+                navigateTo(pageId);
+                history.pushState(null, '', href);
+            }
+        });
+    });
+
+    // Handle initial load
+    const hash = window.location.hash.substring(1) || 'home';
+    navigateTo(hash);
+    
+    // Handle back button
+    window.addEventListener('popstate', () => {
+        const hash = window.location.hash.substring(1) || 'home';
+        navigateTo(hash);
+    });
+});
+
+  </script>
+</body>
+</html>
