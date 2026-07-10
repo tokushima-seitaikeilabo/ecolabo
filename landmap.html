@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地形分類図 Webマップ</title>
+    <!-- LeafletのCSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        #map { width: 100%; height: 100%; }
+        
+        /* 透過度スライダーのスタイル */
+        .opacity-control {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        /* 凡例（レジェンド）のスタイル */
+        .legend {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            font-family: sans-serif;
+            font-size: 13px;
+            line-height: 18px;
+            color: #333;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+            border: 1px solid #999;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- LeafletのJavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // 1. 地理院タイルの設定
+    const std = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+        attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（標準地図）</a>",
+        maxZoom: 18
+    });
+
+    const photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+        attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（航空写真）</a>",
+        maxZoom: 18
+    });
+
+    const relief = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png', {
+        attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（色別標高図）</a>",
+        maxZoom: 15
+    });
+
+    // 2. マップの初期化
+    const map = L.map('map', {
+        center: [35.3606, 138.7274],
+        zoom: 12,
+        layers: [std]
+    });
+
+    // ★追加部分：データ出典を常に右下に小さく表示する
+    map.attributionControl.addAttribution("国土数値情報の20万分の１土地分類基本調査を加工して作成しています");
+
+    // 3. 背景地図の切り替えコントロール
+    const baseMaps = {
+        "標準地図": std,
+        "航空写真": photo,
+        "色別標高図": relief
+    };
+    const layerControl = L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+
+    // 4. 地形分類に応じた色の塗り分け設定
+    function getColor(d) {
+        return d === '山地'       ? '#8B5A2B' :
+               d === '丘陵'       ? '#CD853F' :
+               d === '台地'       ? '#E3A857' :
+               d === '扇状地'     ? '#F4A460' :
+               d === '自然堤防'   ? '#FFD700' :
+               d === '旧河道'     ? '#4682B4' :
+               d === '氾濫平野'   ? '#98FB98' :
+               d === '低地'       ? '#ADFF2F' :
+               d === '水部'       ? '#1E90FF' :
+                                    '#A9A9A9' ; 
+    }
+
+    // 5. 透過度コントロールの作成
+    const OpacityControl = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function (map) {
+            const div = L.DomUtil.create('div', 'opacity-control leaflet-bar');
+            div.innerHTML = `
+                <label for="opacitySlider">地形分類図の透過度: </label><br>
+                <input type="range" id="opacitySlider" min="0" max="1" step="0.1" value="0.6" style="width:100%;">
+            `;
+            L.DomEvent.disableClickPropagation(div);
+            return div;
+        }
+    });
+    map.addControl(new OpacityControl());
+
+    // 6. GeoJSONデータの読み込みとスタイル適用
+    let geojsonLayer;
+    
+    fetch('data/land.geojson')
+        .then(response => response.json())
+        .then(data => {
+            geojsonLayer = L.geoJSON(data, {
+                style: function (feature) {
+                    const category = feature.properties.地形分類 || feature.properties.name || feature.properties.class; 
+                    return {
+                        color: "#666",
+                        weight: 0.5,
+                        fillColor: getColor(category),
+                        fillOpacity: document.getElementById('opacitySlider').value
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties) {
+                        let popupContent = "<table border='1' style='border-collapse: collapse; font-size:12px;'>";
+                        for (let key in feature.properties) {
+                            popupContent += `<tr><th style='padding:3px; background:#f4f4f4;'>${key}</th><td style='padding:3px;'>${feature.properties[key]}</td></tr>`;
+                        }
+                        popupContent += "</table>";
+                        layer.bindPopup(popupContent);
+                    }
+                }
+            }).addTo(map);
+
+            layerControl.addOverlay(geojsonLayer, "地形分類図");
+            map.fitBounds(geojsonLayer.getBounds());
+
+            document.getElementById('opacitySlider').addEventListener('input', function (e) {
+                if (geojsonLayer) {
+                    geojsonLayer.setStyle({ fillOpacity: e.target.value });
+                }
+            });
+
+            // 7. 凡例（レジェンド）の自動生成
+            const legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function (map) {
+                const div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = '<strong>凡例</strong><br>';
+                
+                const categories = [];
+                data.features.forEach(f => {
+                    const cat = f.properties.地形分類 || f.properties.name || f.properties.class;
+                    if (cat && !categories.includes(cat)) {
+                        categories.push(cat);
+                    }
+                });
+                categories.sort();
+
+                categories.forEach(cat => {
+                    div.innerHTML += `<i style="background: ${getColor(cat)}"></i> ${cat}<br>`;
+                });
+                return div;
+            };
+            legend.addTo(map);
+
+        })
+        .catch(error => console.error('GeoJSONの読み込みエラー:', error));
+
+</script>
+</body>
+</html>
