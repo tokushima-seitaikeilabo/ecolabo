@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水路ラインデータ表示マップ</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { width: 100vw; height: 100vh; }
+        /* レイヤーコントロールを少し見やすくするスタイル */
+        .leaflet-control-layers {
+            font-size: 14px;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. マップの初期化（初期位置は日本中心付近。後でデータの範囲に自動調整されます）
+        var map = L.map('map').setView([35.362222, 138.731389], 5);
+
+        // 2. 国土地理院のベースマップを定義
+        var stdMap = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（標準地図）</a>",
+            maxZoom: 18
+        });
+
+        var photoMap = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（写真）</a>",
+            maxZoom: 18
+        });
+
+        var reliefMap = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png', {
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル（色別標高図）</a>",
+            maxZoom: 15
+        });
+
+        // デフォルトで標準地図を表示
+        stdMap.addTo(map);
+
+        // 3. レイヤー切り替え用のグループ定義
+        var baseMaps = {
+            "標準地図": stdMap,
+            "写真 (オルソ)": photoMap,
+            "色別標高図": reliefMap
+        };
+
+        // 4. ラインデータを格納するレイヤーグループ（初期状態でONにするため map に追加）
+        var lineLayerGroup = L.layerGroup().addTo(map);
+
+        var overlayMaps = {
+            "ラインデータ (赤)": lineLayerGroup
+        };
+
+        // 5. レイヤーコントロールを右上に配置
+        L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+        // 6. GeoJSONデータの読み込みと描画
+        fetch('merged_kyoyoshi_line.geojson')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('GeoJSONファイルの読み込みに失敗しました。ファイルパスを確認してください。');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var geojsonLayer = L.geoJSON(data, {
+                    style: function (feature) {
+                        return {
+                            color: '#ff0000', // 赤色
+                            weight: 3,        // 線の太さ
+                            opacity: 0.8      // 透明度
+                        };
+                    }
+                });
+                
+                // レイヤーグループにデータを追加
+                geojsonLayer.addTo(lineLayerGroup);
+                
+                // 読み込んだラインデータの領域に合わせてマップの表示範囲を自動調整
+                map.fitBounds(geojsonLayer.getBounds());
+            })
+            .catch(error => {
+                console.error('エラー:', error);
+            });
+    </script>
+</body>
+</html>
