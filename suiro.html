@@ -60,7 +60,7 @@
         L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
 
         // 6. GeoJSONデータの読み込みと描画
-        fetch('merged_kyoyoshi_line.geojson')
+        fetch('data/merged_kyoyoshi_line.geojson')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('GeoJSONファイルの読み込みに失敗しました。ファイルパスを確認してください。');
