@@ -87,6 +87,48 @@
             .catch(error => {
                 console.error('エラー:', error);
             });
+
+        // --- ここから現在地を表示する機能の追加 ---
+
+        // 現在地を示すマーカーを格納する変数
+        var currentLocationMarker;
+
+        // 位置情報が取得できたときに実行される処理
+        function onLocationFound(e) {
+            // すでにマーカーがあれば削除（位置が更新されたときのため）
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+
+            // Googleマップ風の青い点を描画
+            currentLocationMarker = L.circleMarker(e.latlng, {
+                radius: 8,          // 点の大きさ
+                fillColor: "#0078ff", // 塗りつぶしの色（青）
+                color: "#ffffff",     // 枠線の色（白）
+                weight: 2,          // 枠線の太さ
+                opacity: 1,         // 枠線の透明度
+                fillOpacity: 0.8    // 塗りつぶしの透明度
+            }).addTo(map);
+            
+            // オプション: 点をクリックしたときにポップアップを表示したい場合は以下を追加
+            // currentLocationMarker.bindPopup("現在地").openPopup();
+        }
+
+        // 位置情報の取得に失敗したときに実行される処理
+        function onLocationError(e) {
+            console.warn("現在地の取得に失敗しました: " + e.message);
+        }
+
+        // マップのイベントリスナーを登録
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+
+        // 現在地の取得を開始
+        // watch: true を設定すると、移動しても現在地が更新され続けます
+        // setView: false にしているため、画面の中心はGeoJSONデータの範囲のままになります。
+        // もし開いた瞬間に現在地を中心にしたい場合は setView: true に変更してください。
+        map.locate({ watch: true, setView: false, enableHighAccuracy: true });
+        
     </script>
 </body>
 </html>
